@@ -7,6 +7,12 @@ on:
         required: false
         type: string
         default: "3.24.3"
+      flatpak-name:
+        required: true
+        type: string
+      app-name:
+        required: true
+        type: string
 
     secrets:
       ANDROID_KEYSTORE_BASE64:
@@ -99,7 +105,7 @@ jobs:
           flatpak install --user -y org.gnome.Platform/x86_64/47
 
       - run: flatpak-builder --force-clean build-dir flatpak.yaml --repo=repo
-      - run: flatpak build-bundle repo app.flatpak org.openmediastation.open_media_server_app
+      - run: flatpak build-bundle repo app.flatpak ${{ inputs.flatpak-name }}
 
       - name: Upload Flatpak Artifact
         uses: actions/upload-artifact@v4
@@ -282,8 +288,8 @@ jobs:
       - name: Upload Zipped Windows Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: open_media_server_app.msix
-          path: build\windows\x64\runner\Release\open_media_server_app.msix
+          name: ${{ inputs.app-name }}.msix
+          path: build\windows\x64\runner\Release\${{ inputs.app-name }}.msix
 
   build-ios:
     runs-on: macos-latest  # Nutzt macOS für Xcode & iOS Builds
@@ -418,4 +424,4 @@ jobs:
             artifacts/windows-bin.zip/windows-bin.zip
             artifacts/my-flutter-app.apk/app-release.apk
             artifacts/my-flutter-app.aab/app-release.aab
-            artifacts/open_media_server_app.msix/open_media_server_app.msix
+            artifacts/${{ inputs.app-name }}.msix/${{ inputs.app-name }}.msix
