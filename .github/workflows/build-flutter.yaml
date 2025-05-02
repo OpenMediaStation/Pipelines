@@ -363,7 +363,7 @@ jobs:
           cd ios
           xcodebuild -workspace Runner.xcworkspace \
             -scheme Runner \
-            -sdk iphoneos18.0 \
+            -sdk iphoneos18.2 \
             -configuration Release \
             -archivePath build/App.xcarchive archive \
             -allowProvisioningUpdates
