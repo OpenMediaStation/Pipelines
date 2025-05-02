@@ -354,6 +354,8 @@ jobs:
           security find-identity -v -p codesigning
           grep -a1 '<key>application-identifier</key>' ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovision
 
+      - name: xcode-select => 16.2.0
+        run: sudo xcode-select -s /Applications/Xcode_16.2.0.app
 
       - name: 🔨 Build & Sign iOS App (IPA)
         if: env.APPLE_SIGNING_CERT != ''
