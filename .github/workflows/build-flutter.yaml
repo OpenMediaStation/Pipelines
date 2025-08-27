@@ -7,6 +7,12 @@ on:
         required: false
         type: string
         default: "3.35.1"
+      flatpak-name:
+        required: true
+        type: string
+      app-name:
+        required: true
+        type: string
 
     secrets:
       ANDROID_KEYSTORE_BASE64:
@@ -99,7 +105,7 @@ jobs:
           flatpak install --user -y org.gnome.Platform/x86_64/47
 
       - run: flatpak-builder --force-clean build-dir flatpak.yaml --repo=repo
-      - run: flatpak build-bundle repo app.flatpak org.openmediastation.open_media_server_app
+      - run: flatpak build-bundle repo app.flatpak ${{ inputs.flatpak-name }}
 
       - name: Upload Flatpak Artifact
         uses: actions/upload-artifact@v4
@@ -282,8 +288,8 @@ jobs:
       - name: Upload Zipped Windows Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: open_media_server_app.msix
-          path: build\windows\x64\runner\Release\open_media_server_app.msix
+          name: ${{ inputs.app-name }}.msix
+          path: build\windows\x64\runner\Release\${{ inputs.app-name }}.msix
 
   build-ios:
     runs-on: macos-latest  # Nutzt macOS für Xcode & iOS Builds
@@ -319,6 +325,8 @@ jobs:
           flutter clean
           flutter pub get
 
+      - name: xcode-select => 16.2.0
+        run: sudo xcode-select -s /Applications/Xcode_16.2.0.app
 
       - name: 📱 Build iOS App
         run: flutter build ios --no-codesign
@@ -348,6 +356,8 @@ jobs:
           security find-identity -v -p codesigning
           grep -a1 '<key>application-identifier</key>' ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovision
 
+      - name: xcode-select => 16.2.0
+        run: sudo xcode-select -s /Applications/Xcode_16.2.0.app
 
       - name: 🔨 Build & Sign iOS App (IPA)
         if: env.APPLE_SIGNING_CERT != ''
@@ -357,7 +367,7 @@ jobs:
           cd ios
           xcodebuild -workspace Runner.xcworkspace \
             -scheme Runner \
-            -sdk iphoneos \
+            -sdk iphoneos18.2 \
             -configuration Release \
             -archivePath build/App.xcarchive archive \
             -allowProvisioningUpdates
@@ -418,4 +428,4 @@ jobs:
             artifacts/windows-bin.zip/windows-bin.zip
             artifacts/my-flutter-app.apk/app-release.apk
             artifacts/my-flutter-app.aab/app-release.aab
-            artifacts/open_media_server_app.msix/open_media_server_app.msix
+            artifacts/${{ inputs.app-name }}.msix/${{ inputs.app-name }}.msix
