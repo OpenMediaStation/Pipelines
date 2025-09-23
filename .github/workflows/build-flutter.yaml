@@ -340,6 +340,15 @@ jobs:
       - name: xcode-select => 16.2.0
         run: sudo xcode-select -s /Applications/Xcode_16.2.0.app
 
+      - name: Xcode first launch
+        run: |
+          sudo xcodebuild -license accept
+          sudo xcodebuild -runFirstLaunch
+
+      - name: Ensure iOS platform (18.x) is installed
+        run: |
+          sudo xcodebuild -downloadPlatform iOS
+
       - name: 📱 Build iOS App
         run: flutter build ios --no-codesign
 
