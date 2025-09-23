@@ -195,6 +195,19 @@ jobs:
         with:
           flutter-version: ${{ inputs.flutter-version }}
 
+      - name: Get App version
+        id: get_flutter_version
+        uses: its404/get-flutter-version@v1.0.0
+
+      - name: Setze Build-Nummer in pubspec.yaml
+        uses: Dbono-dev/yaml-action@v1.0.3
+        with:
+          changes: |
+            {
+              "version": "${{ steps.get_flutter_version.outputs.version_number }}+${{ github.run_number }}"
+            }
+          commentOutDevDependencies: true
+
       - name: Install Flutter dependencies
         run: flutter pub get
 
@@ -321,7 +334,7 @@ jobs:
             {
               "version": "${{ steps.get_flutter_version.outputs.version_number }}+${{ github.run_number }}"
             }
-          commentOutDevDependencies: false
+          commentOutDevDependencies: true
 
       - name: 🔧 Set up Flutter
         uses: subosito/flutter-action@v2
