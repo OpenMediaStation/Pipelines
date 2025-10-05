@@ -474,41 +474,41 @@ jobs:
             artifacts/my-flutter-app.aab/app-release.aab
             artifacts/${{ inputs.app-name }}.msix/${{ inputs.app-name }}.msix
 
-  release-msstore:
-    name: Publish MSIX to Microsoft Store
-    runs-on: windows-latest
-    needs: windows-msix-build
-    permissions:
-      contents: read
-    if: startsWith(github.ref, 'refs/tags/v')
+  # release-msstore:
+  #   name: Publish MSIX to Microsoft Store
+  #   runs-on: windows-latest
+  #   needs: windows-msix-build
+  #   permissions:
+  #     contents: read
+  #   if: startsWith(github.ref, 'refs/tags/v')
 
-    steps:
-      - name: Download MSIX artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ inputs.app-name }}.msix
-          path: msix
+  #   steps:
+  #     - name: Download MSIX artifact
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: ${{ inputs.app-name }}.msix
+  #         path: msix
 
-      - name: List downloaded files (debug)
-        run: dir msix
+  #     - name: List downloaded files (debug)
+  #       run: dir msix
 
-      # Install the official Microsoft Store Developer CLI
-      - name: Setup Microsoft Store Developer CLI
-        uses: microsoft/microsoft-store-apppublisher@v1.3
+  #     # Install the official Microsoft Store Developer CLI
+  #     - name: Setup Microsoft Store Developer CLI
+  #       uses: microsoft/microsoft-store-apppublisher@v1.3
 
-      # Configure the CLI with Partner Center credentials (stored as repo/org secrets)
-      - name: Configure MSStore CLI
-        run: >
-          msstore reconfigure
-          --tenantId "${{ secrets.PARTNER_CENTER_TENANT_ID }}"
-          --sellerId "${{ secrets.PARTNER_CENTER_SELLER_ID }}"
-          --clientId "${{ secrets.PARTNER_CENTER_CLIENT_ID }}"
-          --clientSecret "${{ secrets.PARTNER_CENTER_CLIENT_SECRET }}"
+  #     # Configure the CLI with Partner Center credentials (stored as repo/org secrets)
+  #     - name: Configure MSStore CLI
+  #       run: >
+  #         msstore reconfigure
+  #         --tenantId "${{ secrets.PARTNER_CENTER_TENANT_ID }}"
+  #         --sellerId "${{ secrets.PARTNER_CENTER_SELLER_ID }}"
+  #         --clientId "${{ secrets.PARTNER_CENTER_CLIENT_ID }}"
+  #         --clientSecret "${{ secrets.PARTNER_CENTER_CLIENT_SECRET }}"
 
-      # Create and commit a Store submission using the MSIX we just downloaded
-      - name: Publish to Microsoft Store
-        run: >
-          msstore publish "msix/${{ inputs.app-name }}.msix"
-          --appId "${{ secrets.MSSTORE_PRODUCT_ID }}"
-        env:
-          MSSTORE_LOG_LEVEL: debug
+  #     # Create and commit a Store submission using the MSIX we just downloaded
+  #     - name: Publish to Microsoft Store
+  #       run: >
+  #         msstore publish "msix/${{ inputs.app-name }}.msix"
+  #         --appId "${{ secrets.MSSTORE_PRODUCT_ID }}"
+  #       env:
+  #         MSSTORE_LOG_LEVEL: debug
