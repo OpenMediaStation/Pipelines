@@ -29,16 +29,16 @@ on:
         required: false
       APP_STORE_CONNECT_PRIVATE_KEY:
         required: false
-      PARTNER_CENTER_TENANT_ID:
-        required: true
-      PARTNER_CENTER_SELLER_ID:
-        required: true
-      PARTNER_CENTER_CLIENT_ID:
-        required: true
-      PARTNER_CENTER_CLIENT_SECRET:
-        required: true
-      MSSTORE_PRODUCT_ID:
-        required: true
+      # PARTNER_CENTER_TENANT_ID:
+      #   required: true
+      # PARTNER_CENTER_SELLER_ID:
+      #   required: true
+      # PARTNER_CENTER_CLIENT_ID:
+      #   required: true
+      # PARTNER_CENTER_CLIENT_SECRET:
+      #   required: true
+      # MSSTORE_PRODUCT_ID:
+      #   required: true
 
 jobs:
   build-linux:
