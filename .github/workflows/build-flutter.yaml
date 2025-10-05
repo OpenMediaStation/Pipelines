@@ -508,10 +508,7 @@ jobs:
       # Create and commit a Store submission using the MSIX we just downloaded
       - name: Publish to Microsoft Store
         run: >
-          msstore publish .
+          msstore publish "msix/${{ inputs.app-name }}.msix"
           --appId "${{ secrets.MSSTORE_PRODUCT_ID }}"
-          --inputDirectory "msix"
         env:
-          # Optional: increase verbosity if you need deeper logs
           MSSTORE_LOG_LEVEL: debug
-
